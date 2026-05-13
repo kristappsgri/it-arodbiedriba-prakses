@@ -1,11 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="lv">
 <head>
-    <title>Supabase tests</title>
+    <meta charset="UTF-8">
+    <title>IT Arodbiedrības biedri</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .member-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .member-name {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #2c3e50;
+        }
+        .member-status {
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .loading {
+            text-align: center;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-    <h1>Testē Supabase</h1>
-    <div id="result">Pārbauda...</div>
+    <h1>📋 IT Arodbiedrības biedri</h1>
+    <div id="members-list" class="loading">Ielādē datus...</div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -14,17 +55,35 @@
         
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        async function test() {
-            const { data, error } = await supabase.from('members').select('*');
+        async function loadMembers() {
+            const container = document.getElementById('members-list');
             
-            if (error) {
-                document.getElementById('result').innerHTML = '❌ KĻŪDA: ' + error.message;
-            } else {
-                document.getElementById('result').innerHTML = '✅ DATI: ' + JSON.stringify(data);
+            try {
+                const { data, error } = await supabase
+                    .from('members')
+                    .select('*');
+                
+                if (error) throw error;
+                
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<p class="error">Nav atrasts neviens biedrs.</p>';
+                    return;
+                }
+                
+                container.innerHTML = data.map(member => `
+                    <div class="member-card">
+                        <div class="member-name">👤 ${member.name}</div>
+                        <div class="member-status">📌 Statuss: ${member.status}</div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Kļūda:', error);
+                container.innerHTML = `<div class="error">❌ Neizdevās ielādēt datus: ${error.message}</div>`;
             }
         }
         
-        test();
+        loadMembers();
     </script>
 </body>
 </html>
