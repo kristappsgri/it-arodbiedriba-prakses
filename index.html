@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="lv">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>IT Arodbiedrības biedri</title>
     <style>
         body {
@@ -53,13 +52,13 @@
         const SUPABASE_URL = 'https://etjtssfhauiformhndwj.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_p6ZMMKsLPusLG-e3CuFpqw_49pMi9TM';
         
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         async function loadMembers() {
             const container = document.getElementById('members-list');
             
             try {
-                const { data, error } = await supabase
+                const { data, error } = await _supabase
                     .from('members')
                     .select('*');
                 
@@ -78,8 +77,7 @@
                 `).join('');
                 
             } catch (error) {
-                console.error('Kļūda:', error);
-                container.innerHTML = `<div class="error">❌ Neizdevās ielādēt datus: ${error.message}</div>`;
+                container.innerHTML = `<div class="error">❌ Kļūda: ${error.message}</div>`;
             }
         }
         
