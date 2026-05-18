@@ -44,7 +44,7 @@
     </style>
 </head>
 <body>
-    <h1>📋 IT Arodbiedrības biedri</h1>
+    <h1>IT Arodbiedrības biedri</h1>
     <div id="members-list" class="loading">Ielādē datus...</div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -52,13 +52,13 @@
         const SUPABASE_URL = 'https://etjtssfhauiformhndwj.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_p6ZMMKsLPusLG-e3CuFpqw_49pMi9TM';
         
-        const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const mySupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         async function loadMembers() {
             const container = document.getElementById('members-list');
             
             try {
-                const { data, error } = await _supabase
+                const { data, error } = await mySupabase
                     .from('members')
                     .select('*');
                 
